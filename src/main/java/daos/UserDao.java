@@ -11,7 +11,7 @@ operates on, so this UserDao should contain everything the application needs to 
 is generally specific to one type of data store, so if we had multiple persistence solutions we might have multiple
 DAOs. Later we will "wrap" these DAOs with Spring Data Repositories, and abstract ourselves away from those specifics.
  */
-public class UserDao {
+public class UserDao implements Dao<User>{
     //A DAO should contain the connection to the data store. We encapsulate all necessary components for CRUD
     private final Connection connection;
 
@@ -25,7 +25,7 @@ public class UserDao {
         /*
         Because the database is embedded and volatile, we need to initialize the schema when the app starts. Later when
         a non-volatile database is available to us, we can change this to initialize the schema just once.
-         */
+        */
         String sql = "CREATE TABLE users(id INT PRIMARY KEY AUTO_INCREMENT, username VARCHAR(200) UNIQUE, " +
                 "password VARCHAR(200), first_name VARCHAR(200), last_name VARCHAR(200), email VARCHAR(200))";
         try {
@@ -84,6 +84,32 @@ public class UserDao {
         return user;
     }
 
+    @Override
+    public User findById(int id) {
+        User user = new User();
+
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if(rs.next()) {
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastname(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return user;
+    }
+
     /*
     This is the pattern for a JDBC query. Generally all queries for info will follow a similar pattern. The most
     confusing part here is the result set, which must be iterated over once for each result.
@@ -93,7 +119,7 @@ public class UserDao {
     4. Extract the data from the result set, store in the object (perhaps looping through many results)
     5. Return the object
      */
-    public User findUserByUsername(String username) {
+    public User findByUsername(String username) {
         User user = new User();
 
         String sql = "SELECT * FROM users WHERE username = ?";
@@ -144,7 +170,7 @@ public class UserDao {
         }
     }
 
-    public void deleteUserById(int id) {
+    public void delete(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
