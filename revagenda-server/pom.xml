@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.revature</groupId>
-	<artifactId>revagenda</artifactId>
+	<artifactId>revagenda-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>revagenda</name>
+	<name>revagenda-server</name>
 	<description>Full Stack Demo App</description>
 	<url/>
 	<licenses>
