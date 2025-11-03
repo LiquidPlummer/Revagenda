@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 function Registration() {
-    let url = 'http://localhost:8080/register'
+    let url = 'http://ec2-54-234-94-174.compute-1.amazonaws.com:8080/register'
 
 
   const [username, setUsername] = useState('');
