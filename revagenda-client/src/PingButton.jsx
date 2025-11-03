@@ -1,7 +1,7 @@
 import React from 'react';
 
 function PingButton() {
-    const url = 'http://localhost:8080/ping'
+    const url = 'http://ec2-50-17-99-29.compute-1.amazonaws.com:8090/ping'
 
   const handlePing = async () => {
     try {
