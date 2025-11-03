@@ -2,12 +2,20 @@ pipeline {
     agent any
     
     environment {
-        S3_BUCKET = 'your-react-app-bucket'
+        S3_BUCKET = 'trng-00002309-bucket'
+        AWS_REGION = 'us-east-2'
         DOCKER_IMAGE = 'spring-backend'
     }
     
     stages {
-        stage('Build React') {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/LiquidPlummer/Revagenda'
+            }
+        }
+        
+        stage('Build React Frontend') {
             steps {
                 dir('frontend') {
                     sh 'npm install'
@@ -16,15 +24,15 @@ pipeline {
             }
         }
         
-        stage('Deploy to S3') {
+        stage('Deploy Frontend to S3') {
             steps {
-                dir('frontend/build') {
-                    sh 'aws s3 sync . s3://${S3_BUCKET}/ --delete'
+                dir('revagenda-client/dist') {
+                    sh 'aws s3 sync . s3://${S3_BUCKET}/ --delete --region ${AWS_REGION}'
                 }
             }
         }
         
-        stage('Build Spring Boot') {
+        stage('Build Spring Backend') {
             steps {
                 dir('backend') {
                     sh './mvnw clean package -DskipTests'
@@ -32,22 +40,36 @@ pipeline {
             }
         }
         
-        stage('Build Docker Image') {
-            steps {
-                dir('backend') {
-                    sh 'docker build -t ${DOCKER_IMAGE}:latest .'
-                }
-            }
-        }
-        
-        stage('Deploy Container') {
+        stage('Cleanup Old Docker Resources') {
             steps {
                 sh '''
                     docker stop ${DOCKER_IMAGE} || true
                     docker rm ${DOCKER_IMAGE} || true
-                    docker run -d --name ${DOCKER_IMAGE} -p 8081:8080 ${DOCKER_IMAGE}:latest
+                    docker system prune -a -f
                 '''
             }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t ${DOCKER_IMAGE}:${BUILD_NUMBER} .'
+                sh 'docker tag ${DOCKER_IMAGE}:${BUILD_NUMBER} ${DOCKER_IMAGE}:latest'
+            }
+        }
+        
+        stage('Deploy Backend Container') {
+            steps {
+                sh 'docker run -d --name ${DOCKER_IMAGE} -p 8090:8080 ${DOCKER_IMAGE}:latest'
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
         }
     }
 }
