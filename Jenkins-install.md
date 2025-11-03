@@ -104,6 +104,13 @@ You should see an empty list of containers (not a permission error).
 4. Install the plugin
 5. Restart Jenkins if prompted
 
+## 6. Install Embeddable Build Status Plugin
+1. Navigate to: **Manage Jenkins** → **Plugins** → **Available plugins**
+2. Search for "Embeddable Build Status"
+3. Install the plugin
+4. Restart Jenkins if prompted
+5. Access badge from job sidebar: **Embeddable Build Status**
+
 ## Done!
 Jenkins can now run Docker commands and deploy to containers.
 
