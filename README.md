@@ -1,7 +1,6 @@
 # Revagenda
 [![Build Status](http://ec2-50-17-99-29.compute-1.amazonaws.com:8080/buildStatus/icon?job=revagenda-demo)](http://ec2-50-17-99-29.compute-1.amazonaws.com:8080/job/revagenda-demo/)
 
-
 # Jenkins Pipeline Setup Guide
 
 ## Project Structure
@@ -37,8 +36,8 @@ pipeline {
     agent any
     
     environment {
-        S3_BUCKET = 'trng-00002309-bucket'
-        SECRET_BUCKET = 'kyles-secret-bucket'
+        S3_BUCKET = 'your-react-app-bucket'
+        SECRET_BUCKET = 'your-secrets-bucket'
         AWS_REGION = 'us-east-2'
         DOCKER_IMAGE = 'spring-backend'
         EXTERNAL_PORT = '8090'
@@ -49,7 +48,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/LiquidPlummer/Revagenda'
+                    url: 'https://github.com/your-username/your-repo'
             }
         }
         
@@ -72,7 +71,7 @@ pipeline {
 
         stage('Fetch Secrets') {
             steps {
-                sh 'aws s3 cp s3://${SECRET_BUCKET}/kyle/application.properties revagenda-server/src/main/resources/'
+                sh 'aws s3 cp s3://${SECRET_BUCKET}/path/to/application.properties revagenda-server/src/main/resources/'
             }
         }
         
@@ -203,12 +202,3 @@ Or manually add:
 ```markdown
 ![Build Status](http://your-ec2-ip:8080/buildStatus/icon?job=your-job-name)
 ```
-
-**Note:** Enable anonymous read access in Jenkins:
-- Go to **Manage Jenkins** → **Security** → **Configure Global Security**
-- Under **Authorization**, grant **Read** permission for **Job** and **View** to Anonymous users
-
-## Access Your Applications
-
-- **React Frontend**: `http://your-bucket-name.s3-website-us-east-1.amazonaws.com`
-- **Spring Backend**: `http://your-ec2-ip:8081`
