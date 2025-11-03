@@ -36,7 +36,7 @@ pipeline {
         
         stage('Build Spring Backend') {
             steps {
-                dir('backrevagenda-server') {
+                dir('revagenda-server') {
                     sh './mvnw clean package -DskipTests'
                 }
             }
