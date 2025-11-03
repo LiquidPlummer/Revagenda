@@ -5,6 +5,8 @@ pipeline {
         S3_BUCKET = 'trng-00002309-bucket'
         AWS_REGION = 'us-east-2'
         DOCKER_IMAGE = 'spring-backend'
+        EXTERNAL_PORT = '8090'
+        INTERNAL_PORT = '8080'
     }
     
     stages {
@@ -17,7 +19,7 @@ pipeline {
         
         stage('Build React Frontend') {
             steps {
-                dir('frontend') {
+                dir('revagenda-client') {
                     sh 'npm install'
                     sh 'npm run build'
                 }
@@ -34,7 +36,7 @@ pipeline {
         
         stage('Build Spring Backend') {
             steps {
-                dir('backend') {
+                dir('backrevagenda-server') {
                     sh './mvnw clean package -DskipTests'
                 }
             }
@@ -59,7 +61,7 @@ pipeline {
         
         stage('Deploy Backend Container') {
             steps {
-                sh 'docker run -d --name ${DOCKER_IMAGE} -p 8090:8080 ${DOCKER_IMAGE}:latest'
+                sh 'docker run -d --name ${DOCKER_IMAGE} -p ${EXTERNAL_PORT}:${INTERNAL_PORT} ${DOCKER_IMAGE}:latest'
             }
         }
     }
