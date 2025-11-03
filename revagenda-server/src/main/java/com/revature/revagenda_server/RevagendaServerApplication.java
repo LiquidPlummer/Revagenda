@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "com.revature.revagenda_server.controllers",
         "com.revature.revagenda_server.repositories",
         "com.revature.revagenda_server.services",
-        "com.revature.revagenda_server.components"
+        "com.revature.revagenda_server.configs"
 })
 public class RevagendaServerApplication {
 
