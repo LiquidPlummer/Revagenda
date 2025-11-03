@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/users")
     public List<User> getUsers() {
         List<User> hardCodedList = new ArrayList<>();
-        hardCodedList.add(new User(1, "kplu", "password123", "Kyle", "Plummer"));
+        hardCodedList.add(new User(1, "kplu", "Kyle", "Plummer"));
         return hardCodedList;
     }
 

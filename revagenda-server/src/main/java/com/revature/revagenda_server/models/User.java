@@ -1,19 +1,16 @@
 package com.revature.revagenda_server.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column
     private String username;
-
-    @Column
-    private String password;
 
     @Column
     private String firstName;
@@ -21,25 +18,23 @@ public class User {
     @Column
     private String lastName;
 
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "auth_username", referencedColumnName = "username")
+    private Auth auth;
+
     public User() {
     }
 
-    public User(String username, String password) {
+    public User(String username, String firstName, String lastName) {
         this.username = username;
-        this.password = password;
-    }
-
-    public User(String username, String password, String firstName, String lastName) {
-        this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public User(Integer id, String username, String password, String firstName, String lastName) {
+    public User(Integer id, String username, String firstName, String lastName) {
         this.id = id;
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -60,14 +55,6 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -82,5 +69,13 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Auth getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Auth auth) {
+        this.auth = auth;
     }
 }
