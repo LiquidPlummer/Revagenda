@@ -3,6 +3,7 @@ pipeline {
     
     environment {
         S3_BUCKET = 'trng-00002309-bucket'
+        SECRET_BUCKET = 'kyles-secret-bucket'
         AWS_REGION = 'us-east-2'
         DOCKER_IMAGE = 'spring-backend'
         EXTERNAL_PORT = '8090'
@@ -31,6 +32,12 @@ pipeline {
                 dir('revagenda-client/dist') {
                     sh 'aws s3 sync . s3://${S3_BUCKET}/ --delete --region ${AWS_REGION}'
                 }
+            }
+        }
+
+        stage('Fetch Secrets') {
+            steps {
+                sh 'aws s3 cp s3://${SECRET_BUCKET}/kyle/application.properties revagenda-server/src/main/resources/'
             }
         }
         
