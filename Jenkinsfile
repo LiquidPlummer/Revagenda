@@ -6,7 +6,7 @@ pipeline {
         SECRET_BUCKET = 'kyles-secret-bucket'
         AWS_REGION = 'us-east-2'
         DOCKER_IMAGE = 'spring-backend'
-        EXTERNAL_PORT = '8090'
+        EXTERNAL_PORT = '8091'
         INTERNAL_PORT = '8080'
     }
     
