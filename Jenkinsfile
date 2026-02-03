@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     environment {
-        S3_BUCKET = 'trng-00002309-bucket'
-        SECRET_BUCKET = 'kyles-secret-bucket'
+        S3_BUCKET = 'revagenda-site'
+        SECRET_BUCKET = '2349-secrets'
         AWS_REGION = 'us-east-2'
         DOCKER_IMAGE = 'spring-backend'
         EXTERNAL_PORT = '8091'
